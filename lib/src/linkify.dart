@@ -132,7 +132,7 @@ class LinkifyText extends StatelessWidget {
 
   final Map<LinkType, TextStyle>? customLinkStyles;
 
-  final void Function(List<Link>)? linkifyListCallBack;
+  final Map<String,String>? linkifyListCallBack;
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +143,7 @@ class LinkifyText extends StatelessWidget {
           onTap: onTap,
           linkTypes: linkTypes,
           customLinkStyles: customLinkStyles,
-          linkifyListCallBack: linkifyListCallBack),
+          mapReplace: linkifyListCallBack),
       key: key,
       style: textStyle,
       strutStyle: strutStyle,
@@ -378,7 +378,7 @@ TextSpan _linkify({
   List<LinkType>? linkTypes,
   Map<LinkType, TextStyle>? customLinkStyles,
   Function(Link)? onTap,
-  Function(List<Link>)? linkifyListCallBack,
+  Map<String,String>? mapReplace,
 }) {
   final _regExp = constructRegExpFromLinkType(linkTypes ?? [LinkType.url]);
 
@@ -388,7 +388,6 @@ TextSpan _linkify({
   final texts = text.split(_regExp);
   final List<InlineSpan> spans = [];
   final links = _regExp.allMatches(text).toList();
-  final List<Link> linkifyList = [];
 
   for (final text in texts) {
     spans.add(TextSpan(
@@ -400,7 +399,7 @@ TextSpan _linkify({
       // add the link
       spans.add(
         TextSpan(
-          text: link.value,
+          text:( mapReplace?[link.value??'']?.isNotEmpty??false) ? (mapReplace?[link.value??''] ??'' ): link.value,
           style: customLinkStyles?[link.type] ?? linkStyle,
           recognizer: TapGestureRecognizer()
             ..onTap = () {
@@ -409,11 +408,9 @@ TextSpan _linkify({
         ),
       );
 
-      linkifyList.add(link);
     }
   }
 
-  linkifyListCallBack?.call(linkifyList);
 
   return TextSpan(children: spans);
 }
