@@ -132,7 +132,7 @@ class LinkifyText extends StatelessWidget {
 
   final Map<LinkType, TextStyle>? customLinkStyles;
 
-  final Map<String,String>? linkifyListCallBack;
+  final Map<String, String>? linkifyListCallBack;
 
   @override
   Widget build(BuildContext context) {
@@ -378,7 +378,7 @@ TextSpan _linkify({
   List<LinkType>? linkTypes,
   Map<LinkType, TextStyle>? customLinkStyles,
   Function(Link)? onTap,
-  Map<String,String>? mapReplace,
+  Map<String, String>? mapReplace,
 }) {
   final _regExp = constructRegExpFromLinkType(linkTypes ?? [LinkType.url]);
 
@@ -399,7 +399,9 @@ TextSpan _linkify({
       // add the link
       spans.add(
         TextSpan(
-          text:( mapReplace?[link.value??'']?.isNotEmpty??false) ? (mapReplace?[link.value??''] ??'' ): link.value,
+          text: (mapReplace?[link.value ?? '']?.isNotEmpty ?? false)
+              ? (mapReplace?[link.value ?? ''] ?? '')
+              : link.value,
           style: customLinkStyles?[link.type] ?? linkStyle,
           recognizer: TapGestureRecognizer()
             ..onTap = () {
@@ -407,10 +409,8 @@ TextSpan _linkify({
             },
         ),
       );
-
     }
   }
-
 
   return TextSpan(children: spans);
 }
