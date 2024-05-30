@@ -24,7 +24,7 @@ class LinkifyText extends StatelessWidget {
       this.maxLines,
       this.semanticsLabel,
       this.textWidthBasis,
-      this.linkifyListCallBack,
+      this.mapReplace,
       Key? key})
       : super(key: key);
 
@@ -132,7 +132,7 @@ class LinkifyText extends StatelessWidget {
 
   final Map<LinkType, TextStyle>? customLinkStyles;
 
-  final Map<String, String>? linkifyListCallBack;
+  final Map<String, String>? mapReplace;
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +143,7 @@ class LinkifyText extends StatelessWidget {
           onTap: onTap,
           linkTypes: linkTypes,
           customLinkStyles: customLinkStyles,
-          mapReplace: linkifyListCallBack),
+          mapReplace: mapReplace),
       key: key,
       style: textStyle,
       strutStyle: strutStyle,
