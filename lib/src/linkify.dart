@@ -24,6 +24,7 @@ class LinkifyText extends StatelessWidget {
       this.maxLines,
       this.semanticsLabel,
       this.textWidthBasis,
+      this.linkifyListCallBack,
       Key? key})
       : super(key: key);
 
@@ -131,6 +132,8 @@ class LinkifyText extends StatelessWidget {
 
   final Map<LinkType, TextStyle>? customLinkStyles;
 
+  final void Function(List<Link>)? linkifyListCallBack;
+
   @override
   Widget build(BuildContext context) {
     return Text.rich(
@@ -139,7 +142,8 @@ class LinkifyText extends StatelessWidget {
           linkStyle: linkStyle,
           onTap: onTap,
           linkTypes: linkTypes,
-          customLinkStyles: customLinkStyles),
+          customLinkStyles: customLinkStyles,
+          linkifyListCallBack: linkifyListCallBack),
       key: key,
       style: textStyle,
       strutStyle: strutStyle,
@@ -374,6 +378,7 @@ TextSpan _linkify({
   List<LinkType>? linkTypes,
   Map<LinkType, TextStyle>? customLinkStyles,
   Function(Link)? onTap,
+  Function(List<Link>)? linkifyListCallBack,
 }) {
   final _regExp = constructRegExpFromLinkType(linkTypes ?? [LinkType.url]);
 
@@ -383,6 +388,7 @@ TextSpan _linkify({
   final texts = text.split(_regExp);
   final List<InlineSpan> spans = [];
   final links = _regExp.allMatches(text).toList();
+  final List<Link> linkifyList = [];
 
   for (final text in texts) {
     spans.add(TextSpan(
@@ -402,7 +408,12 @@ TextSpan _linkify({
             },
         ),
       );
+
+      linkifyList.add(link);
     }
   }
+
+  linkifyListCallBack?.call(linkifyList);
+
   return TextSpan(children: spans);
 }
