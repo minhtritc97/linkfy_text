@@ -4,7 +4,7 @@ import 'package:linkfy_text/src/enum.dart';
 
 // url regex that accept https, http, www
 String urlRegExp =
-    r'https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b[-a-zA-Z0-9@:%_\+.~#?&\/=]*';
+    r'[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?';;
 
 String hashtagRegExp = r'#[a-zA-Z\u00C0-\u01B4\w_\u1EA0-\u1EF9!$%^&]{1,}(?=\s|$)';
 
@@ -19,7 +19,7 @@ RegExp constructRegExpFromLinkType(List<LinkType> types) {
   // default case where we always want to match url strings
   final len = types.length;
   if (len == 1 && types.first == LinkType.url) {
-    return RegExp(urlRegExp);
+    return RegExp(urlRegExp, caseSensitive: false);
   }
   final buffer = StringBuffer();
   for (var i = 0; i < len; i++) {
@@ -59,7 +59,7 @@ LinkType getMatchedType(String match) {
   late LinkType type;
   if (RegExp(emailRegExp).hasMatch(match)) {
     type = LinkType.email;
-  } else if (RegExp(urlRegExp).hasMatch(match)) {
+  } else if (RegExp(urlRegExp, caseSensitive: false).hasMatch(match)) {
     type = LinkType.url;
   }else if (RegExp(phoneRegExp).hasMatch(match)) {
     type = LinkType.phone;
