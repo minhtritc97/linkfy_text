@@ -4,7 +4,7 @@ import 'package:linkfy_text/src/enum.dart';
 
 // url regex that accept https, http, www
 String urlRegExp =
-    r'[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?';
+      r'(?:(?:https?|ftp):\/\/(?:www\.)?|www\.)[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{2,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)|(?:(?:https?|ftp):\/\/)?(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.(?:com|org|net|edu|gov|mil|io|co|dev|app|ai|tech|info|biz|me|tv|xyz|online|site|club|vn|uk|au|ca|de|fr|jp|cn|in|br|ru|za|nl|se|no|dk|fi|be|at|ch|es|it|pt|pl|cz|gr|tr|ae|sg|hk|tw|kr|th|my|id|ph|nz)(?:\/[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)?';
 
 String hashtagRegExp = r'#[a-zA-Z\u00C0-\u01B4\w_\u1EA0-\u1EF9!$%^&]{1,}(?=\s|$)';
 
