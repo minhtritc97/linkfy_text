@@ -1,1 +1,1 @@
-enum LinkType { url, email, hashTag, userTag, phone }
+enum LinkType { url, email, hashTag, userTag, phone, special }
