@@ -3,8 +3,7 @@ import 'package:linkfy_text/src/enum.dart';
 // ✅ Pre-compile một lần duy nhất — không tạo lại mỗi lần gọi
 // urlRegExp chỉ dùng để EXTRACT từ văn bản (false positive OK)
 // isUrl() sẽ validate lại sau → không cần TLD list phức tạp ở đây
-const String _urlPattern =
-    r'(?:(?:https?|ftp):\/\/|www\.)[^\s\n]+'
+const String _urlPattern = r'(?:(?:https?|ftp):\/\/|www\.)[^\s\n]+'
     r'|(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)'
     r'+(?:com|net|org|io|dev|xyz|tech|ai|app|co|gov|edu|info|biz|me|'
     r'vn|uk|us|ca|au|br|de|fr|jp|cn|ru|sg|hk|tw)[^\s\n]*';
@@ -13,6 +12,7 @@ const String _hashtagPattern =
     r'#[a-zA-Z\u00C0-\u01B4\w_\u1EA0-\u1EF9!$%^&]{1,}(?=\s|$)';
 const String _userTagPattern =
     r'@[a-zA-Z\u00C0-\u01B4\w_\u1EA0-\u1EF9!$%^&]{1,}(?=\s|$)';
+const String _specialPattern = r'&0+&';
 const String _phonePattern =
     r'\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*';
 const String _emailPattern =
@@ -24,6 +24,7 @@ final RegExp _hashtagRegExp = RegExp(_hashtagPattern);
 final RegExp _userTagRegExp = RegExp(_userTagPattern);
 final RegExp _phoneRegExp = RegExp(_phonePattern);
 final RegExp _emailRegExp = RegExp(_emailPattern);
+final RegExp _specialRegExp = RegExp(_specialPattern);
 
 // ✅ Cache kết quả constructRegExp theo key
 final Map<String, RegExp> _regExpCache = {};
@@ -41,19 +42,21 @@ RegExp constructRegExpFromLinkType(List<LinkType> types) {
   for (var i = 0; i < len; i++) {
     final isLast = i == len - 1;
     final pattern = switch (types[i]) {
-      LinkType.url      => _urlPattern,
-      LinkType.hashTag  => _hashtagPattern,
-      LinkType.userTag  => _userTagPattern,
-      LinkType.email    => _emailPattern,
-      LinkType.phone    => _phonePattern,
-      _                 => null,
+      LinkType.url => _urlPattern,
+      LinkType.hashTag => _hashtagPattern,
+      LinkType.userTag => _userTagPattern,
+      LinkType.email => _emailPattern,
+      LinkType.phone => _phonePattern,
+      LinkType.special => _specialPattern,
+      _ => null,
     };
     if (pattern != null) {
       buffer.write(isLast ? '($pattern)' : '($pattern)|');
     }
   }
 
-  return _regExpCache[cacheKey] = RegExp(buffer.toString(), caseSensitive: false);
+  return _regExpCache[cacheKey] =
+      RegExp(buffer.toString(), caseSensitive: false);
 }
 
 LinkType getMatchedType(String match) {
@@ -63,6 +66,7 @@ LinkType getMatchedType(String match) {
   if (_phoneRegExp.hasMatch(match)) return LinkType.phone;
   if (_userTagRegExp.hasMatch(match)) return LinkType.userTag;
   if (_hashtagRegExp.hasMatch(match)) return LinkType.hashTag;
+  if (_specialRegExp.hasMatch(match)) return LinkType.special;
   return LinkType.url; // fallback
 }
 
