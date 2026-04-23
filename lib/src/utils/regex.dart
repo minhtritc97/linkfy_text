@@ -16,7 +16,7 @@ const String _specialPattern = r'&0+&';
 const String _phonePattern =
     r'\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*';
 const String _emailPattern =
-    r"([a-zA-Z0-9.!#$%&'*+\-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+)";
+    r"[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+(?:\.[a-zA-Z]{2,}){1,3}";
 
 // ✅ Compile một lần, tái sử dụng mãi
 final RegExp _urlRegExp = RegExp(_urlPattern, caseSensitive: false);
